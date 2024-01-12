@@ -6,6 +6,9 @@ import {
 } from "react-router-dom";
 import Loging from "./pages/loging/Loging";
 import Registration from "./pages/registration/Registration";
+import Home from "./pages/home/Home";
+import RootLayout from "./components/layouts/RootLayout";
+
 
 
 function App() {
@@ -15,6 +18,11 @@ function App() {
       <>
         <Route path="/" element={<Loging/>}/>
         <Route path="/registation" element={<Registration/>}/>
+         <Route element={<RootLayout/>}>
+           
+         </Route>
+        <Route path="/home" element={<Home/>}/>
+
       </>
 
     )
