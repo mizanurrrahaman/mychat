@@ -30,6 +30,7 @@ const style = {
 
 
 const Loging = () => {
+  let emailregex = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/
   let [passShow, setPassShow] = useState(false)
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -48,6 +49,77 @@ const Loging = () => {
     }
   }
 */}
+
+
+
+  {/*
+  let handleFrom =(e)=>{
+    let {name, value} = e.target
+    setSignupData({
+      ...signupData,[name]: value
+    })
+  }
+*/}
+
+let [error, setError] = useState({
+   email : " ",
+   password : " "
+})
+
+let [signupData, setSignupData] = useState({
+  email: " ",
+  password: " "
+})
+
+let handleFrom =(e)=>{
+ let {name, value} = e.target
+ setSignupData({
+  ...signupData,[name]: value
+ })
+
+}
+ let handleSubmit =()=>{
+    if(!signupData.email){
+      setError({email: "email is not here" })
+    }
+    else if(!signupData.email.match(emailregex)){
+      setError({email: " Email is not valide" })
+    }
+    else if(!signupData.password){
+      setError({email: " "});
+      setError({password: " Password id not here"})
+      return true;
+    }
+    else{
+      setError({
+        email: " ",
+        password: " "
+      })
+      console.log(signupData);
+    }
+ }
+
+ 
+
+
+
+  let handleForgot =(e)=>{
+    setFromData(e.target.value)
+  }
+
+  let handleForgotSubmit =()=>{
+    if(!fromData){
+      console.log(" give me your email")
+    }
+    else if(!fromData.email.match(emailregex)){
+      console.log(" Your email is not write")
+    }
+    else{
+      console.log(fromData);
+    }
+  }
+
+
   
   return (
     <>
@@ -61,8 +133,8 @@ const Loging = () => {
           <button onClick={handleModalClose}> Close</button>
            <div className="forgot-box">
               <h2> Forgot Password</h2>
-             <Input type=" email" labeltext="Email Address" variant="standard"/>
-             <CustomButton text="Send Link" variant="contained"/>
+             <Input onClick={handleForgot} type=" email" labeltext="Email Address" variant="standard"/>
+             <CustomButton onClick={handleForgotSubmit} text="Send Link" variant="contained"/>
            </div>
         </Box> 
         {/*
@@ -81,16 +153,20 @@ const Loging = () => {
                  </div>
                  <div className="form-main">
                    <div>
-                      <Input name="email" type="email" variant="standard" labeltext="Email Address" style="login-input-field"/>
+                      <Input onChange={handleFrom} name="email" type="email" variant="standard" labeltext="Email Address" style="login-input-field"/>
+                      <p>{error.email}</p>
                    </div>
                     <div>
                        {/*
                         <Input name="password" type={passShow ? "text" : "Password" } variant="standard" labeltext="Password" style="login-input-field"/>
                       */}
-                       <Input name="password" type={passShow ? "text" : "Password" } variant="standard" labeltext="Password" style="login-input-field"/>
+                       <div>
+                       <Input onChange={handleFrom} name="password" type={passShow ? "text" : "Password" } variant="standard" labeltext="Password" style="login-input-field"/>
+                         <p>{error.password}</p>
+                       </div>
                        <button onClick={()=>setPassShow(!passShow)}> Show</button>
                     </div>
-                   <CustomButton styleing="loginbtn" variant="contained" text="login to continue"/>
+                   <CustomButton onClick={handleSubmit}  styleing="loginbtn" variant="contained" text="login to continue"/>
                  </div>
                  <AuthNavigate style="loginauth" link="/registation" linktext="sing up" text="Don’t have an account ?"/>
               
