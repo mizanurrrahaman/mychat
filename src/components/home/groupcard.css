@@ -1,0 +1,89 @@
+.group_wrapper{
+    display: flex;
+    gap: 30px;
+   flex-wrap: wrap;
+}
+.groupcard{
+    width: 360px;
+    background-color: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+.group_item{
+    display: flex;
+    flex-direction: column;
+}
+
+.group_title{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.group_heading h4{
+    color: #000;
+    font-size: 22px;
+}
+.group_heading .dots{
+    width: 30px;
+    height: 30px;
+    color: #000;
+    background-color: #e7e3e3;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.usermainbox{
+    margin-top: 17px;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    height: 350px;
+    overflow-y:scroll;
+}
+.usermainbox::-webkit-scrollbar{
+    width: 0;
+}
+.usermainbox::-webkit-scrollbar-thumb{
+    background: red;
+    border-radius: 8px;
+}
+.usermainbox :last-child{
+    border-bottom: 0px;
+}
+.userimgbox{
+    width: 70px;
+    height: 70px;
+    background-color: red;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.userimgbox img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.userhead{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid black;
+}
+.useritem{
+   padding-bottom: 13px;
+   display: flex;
+   column-gap: 14px;
+   align-items: center;
+}
+.addbutton{
+    padding: 10px;
+    background-color: rgb(99, 105, 99);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+}
+
+

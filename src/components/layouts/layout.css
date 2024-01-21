@@ -1,5 +1,57 @@
-.sidebar{
-    width: 100%;
-    background-color: red;
-    height: 100vh;
+.sidebarbox{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    background-color: #5F35F5;
+    align-items: center;
+
+    height: 120vh;
 }
+.img_box{
+    width: 40px;
+    height: 40px;
+    background-color: red;
+    border-radius: 50%;
+}
+.logout{
+    margin: 20px 0;
+    padding: 10px 20px;
+    background-color: white;
+    color: #5F35F5;
+    font-size: 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+
+}
+.navigation{
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    row-gap: 30px;
+}
+.navigation li a{
+ color: white;
+ padding: 10px 15px;
+ display: inline-block;
+}
+.navigation li a svg{
+    font-size: 20px;
+}
+
+.navigation li a.active{
+background-color: white;
+color: #5F35F5;
+border-radius: 10px;
+}
+.username{
+    font-size: 25px;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 20px;
+    color: white;
+}
+.outletbox{
+    padding: 25px;
+}
+
