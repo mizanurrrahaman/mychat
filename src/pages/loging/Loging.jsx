@@ -14,6 +14,8 @@ import AuthNavigate from '../../components/AuthNavigate';
 import LoginImg from '../../assets/images/card.png'
 import Images from '../../utillites/Images';
 import { Modal, Typography } from '@mui/material';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
 
 
 const style = {
@@ -30,6 +32,7 @@ const style = {
 
 
 const Loging = () => {
+  const auth = getAuth();
   let emailregex = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/
   let [passShow, setPassShow] = useState(false)
   const [open, setOpen] = React.useState(false);
@@ -66,36 +69,50 @@ let [error, setError] = useState({
    password : " "
 })
 
-let [signupData, setSignupData] = useState({
+let [fromData, setFromData] = useState({
   email: " ",
   password: " "
 })
 
 let handleFrom =(e)=>{
  let {name, value} = e.target
- setSignupData({
-  ...signupData,[name]: value
+ setFromData({
+  ...fromData,[name]: value
  })
 
 }
  let handleSubmit =()=>{
-    if(!signupData.email){
+    if(!fromData.email){
       setError({email: "email is not here" })
     }
-    else if(!signupData.email.match(emailregex)){
+    else if(!fromData.email.match(emailregex)){
       setError({email: " Email is not valide" })
     }
-    else if(!signupData.password){
+    else if(!fromData.password){
       setError({email: " "});
       setError({password: " Password id not here"})
       return true;
     }
     else{
+      signInWithEmailAndPassword(auth, fromData.email, fromData.password).then((userCredential)=>{
+        console.log(userCredential)
+      }).catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        if(errorCode == "auth/invalide-credential"){
+          setError({email: " Email or password error"})
+        }
+        else{
+          setError({email : " "})
+        }
+        console.log(errorCode)
+        console.log(errorMessage)
+      });
       setError({
         email: " ",
         password: " "
       })
-      console.log(signupData);
+      //console.log(signupData);
     }
  }
 
