@@ -14,7 +14,11 @@ import AuthNavigate from '../../components/AuthNavigate';
 import LoginImg from '../../assets/images/card.png'
 import Images from '../../utillites/Images';
 import { Modal, Typography } from '@mui/material';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+
+
 
 
 
@@ -30,8 +34,8 @@ const style = {
   p: 4,
 };
 
-
 const Loging = () => {
+  const navigate = useNavigate();
   const auth = getAuth();
   let emailregex = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/
   let [passShow, setPassShow] = useState(false)
@@ -41,7 +45,6 @@ const Loging = () => {
   const handleModalClose =()=>{
     setOpen(false)
   }
-
  {/*
   let handlePassShow = ()=>{
     if(passShow){
@@ -52,9 +55,6 @@ const Loging = () => {
     }
   }
 */}
-
-
-
   {/*
   let handleFrom =(e)=>{
     let {name, value} = e.target
@@ -63,7 +63,6 @@ const Loging = () => {
     })
   }
 */}
-
 let [error, setError] = useState({
    email : " ",
    password : " "
@@ -95,7 +94,29 @@ let handleFrom =(e)=>{
     }
     else{
       signInWithEmailAndPassword(auth, fromData.email, fromData.password).then((userCredential)=>{
-        console.log(userCredential)
+       console.log(userCredential)
+   
+      if(userCredential.user.emailVerified){
+        navigate("/home")
+       console.log(userCredential.user)
+     }
+      else{
+       signOut(auth).then(()=>{
+        toast.error('🦄 Please Verify Your Email', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          });
+         //console.log("Please verify your email")
+         //console.log("logout done")
+       })
+      }
+
       }).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -105,8 +126,8 @@ let handleFrom =(e)=>{
         else{
           setError({email : " "})
         }
-        console.log(errorCode)
-        console.log(errorMessage)
+          console.log(errorCode)
+          console.log(errorMessage)
       });
       setError({
         email: " ",
@@ -140,6 +161,22 @@ let handleFrom =(e)=>{
   
   return (
     <>
+
+     {/* <ToastContainer
+     position="top-right"
+     autoClose={5000}
+     hideProgressBar={false}
+     newestOnTop={false}
+     closeOnClick
+     rtl={false}
+     pauseOnFocusLoss
+     draggable
+     pauseOnHover
+     theme="dark"
+     /> */}
+
+ 
+
      <Modal
       open={open}
       onClose={handleClose}

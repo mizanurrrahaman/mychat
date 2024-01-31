@@ -6,13 +6,15 @@ import AuthNavigate from '../../components/AuthNavigate'
 import Input from '../../components/input'
 import Alert from '@mui/material/Alert';
 import { Audio, RotatingLines } from 'react-loader-spinner'
-import { createUserWithEmailAndPassword, getAuth,sendEmailVerification } from "firebase/auth"
+import { createUserWithEmailAndPassword, getAuth,sendEmailVerification,updateProfile} from "firebase/auth"
 import { useNavigate } from "react-router-dom";
+import { getDatabase, ref, set } from "firebase/database";
 
 
 
 
 const Registration = () => {
+  const db = getDatabase();
   const auth = getAuth();
   const navigate = useNavigate();
   const [loader, setLoader] = useState(false)
@@ -37,47 +39,6 @@ const Registration = () => {
  let emailregex = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/
  let regName = /^[a-zA-Z]+(?:\s[a-zA-Z]+)+$/;
  
- {/*
- let handleSubmit =()=>{
-  if(!signupData.email){
-    setError({email: "Email is not here"})
-  }
-  else if(!signupData.email.match(emailregex)){
-    setError({email:" Email is not valide"})
-  }
-  else if(!signupData.fullname){
-    setError({email:" "});
-    setError({fullname: "Enter your name "});
-     if(!signupData.fullname.match(regName)){
-      console.log("Please enter your full name (first & last name).")
-      //setError({fullname:"Please enter your full name (first & last name)."})
-     }
-     else{
-       //console.log("Valid name given")
-       setError({fullname: " tha character is limetation" })
-     }
-  }
-  else if(!signupData.password){
-    setError({fullname: ""});
-    setError({password: " PssWord is not here"})
-    return true;
-  }
-  else{
-    setError({
-      email: " ",
-      fullname: " ",
-      password: " "
-    })
-  
-    createUserWithEmailAndPassword(auth, email, password).then((userCredential)=>{
-      console.log(userCredential);
-    })
-    
-    console.log(signupData);
-
-  }
- }
-*/}
 
 let handleSubmit = () => {
   if(!signupData.email){
@@ -101,8 +62,23 @@ let handleSubmit = () => {
     })
    createUserWithEmailAndPassword
    (auth, signupData.email, signupData.password).then((userCredential)=>{ 
-     console.log(userCredential.user.emailVerified);
-     navigate("/")
+     sendEmailVerification(auth.currentUser).then(()=>{
+        //navigate("/")
+       updateProfile(auth.currentUser,{
+        displayName:signupData.fullname,
+        photoURL: "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
+       }).then(()=>{
+        set(ref(db, 'users/' + userCredential.user.uid), {
+          username: userCredential.user.displayName,
+          email: userCredential.user.email,
+          profileimg : userCredential.user.photoURL
+        }).then(()=>{
+          navigate("/")
+          console.log(userCredential)
+        })
+       }) 
+      })
+     //console.log(userCredential.user.emailVerified);
    }).catch((error)=>{
     const errorCode = error.code
     const errorMessage =error.message;
@@ -125,7 +101,6 @@ let handleSubmit = () => {
     console.log(signupData);
   }
 }
-
 
   return (
     <Box>

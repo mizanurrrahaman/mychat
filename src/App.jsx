@@ -28,7 +28,6 @@ function App() {
            <Route path="/notification" element={<Notification/>}/>
            <Route path="/setting" element={<Setting/>}/>
          </Route>
-
       </>
 
     )
