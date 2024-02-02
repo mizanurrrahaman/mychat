@@ -31,7 +31,7 @@ const Sidebar = () => {
       })
    }
       const userinfo = auth.currentUser;
-      console.log(userinfo.displayName)
+      //console.log(userinfo.displayName)
   return (
    <>
       <ToastContainer
@@ -50,9 +50,11 @@ const Sidebar = () => {
     <div className="sidebarbox">
        <div>
           <div className="img_box">
-             <Images source={userinfo && userinfo.photoURL} alt="img"/>
+             {/* <Images source={userinfo && userinfo.photoURL} alt="img"/> */}
+               <Images source="#" alt="img" />
           </div>
-          <h3 className="username">{userinfo && userinfo.displayName} </h3>
+          {/* <h3 className="username">{userinfo && userinfo.displayName} </h3> */}
+            <h3 className='username'> anik</h3>
        </div>
        <div>
            <ul className="navigation">
