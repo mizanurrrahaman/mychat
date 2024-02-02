@@ -4,6 +4,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background:#fff;
 }
 .loginbox-inner{
     width: 378px;
@@ -93,4 +94,10 @@
     padding: 8px 15px;
     margin-top: 8px;
 }
-
+.passtoggle{
+    border: none;
+    padding: 5px 12px;
+    background-color: blueviolet;
+    color: white;
+    cursor: pointer;
+}

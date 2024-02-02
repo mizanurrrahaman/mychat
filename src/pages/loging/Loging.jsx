@@ -218,7 +218,7 @@ let handleFrom =(e)=>{
                        <Input onChange={handleFrom} name="password" type={passShow ? "text" : "Password" } variant="standard" labeltext="Password" style="login-input-field"/>
                          <p>{error.password}</p>
                        </div>
-                       <button onClick={()=>setPassShow(!passShow)}> Show</button>
+                       <button className="passtoggle" onClick={()=>setPassShow(!passShow)}> Show</button>
                     </div>
                    <CustomButton onClick={handleSubmit}  styleing="loginbtn" variant="contained" text="login to continue"/>
                  </div>
