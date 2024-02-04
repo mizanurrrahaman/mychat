@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { IoHomeOutline } from "react-icons/io5";
 import { AiOutlineMessage } from "react-icons/ai";
 import { IoMdNotificationsOutline } from "react-icons/io";
@@ -10,13 +10,29 @@ import { useNavigate } from "react-router-dom";
 //import { toast } from 'react-toastify';
 import { ToastContainer, toast } from 'react-toastify';
 //import { getAuth } from 'firebase/auth';
+import { useSelector, useDispatch } from 'react-redux';
+import { loginuser } from '../../slices/userSlices';
 
 const Sidebar = () => {
+    const data = useSelector((state) => state.loginuserdata.value)
     const navigate = useNavigate();
     const auth = getAuth();
+    const dispatch = useDispatch()
+
+    useEffect(()=>{
+       if(!data){
+         navigate("/")
+       }
+       else {
+         navigate("/home")
+       }
+    },[])
+
    let handleLogout =()=>{
       signOut(auth).then(()=>{
          //toast("logout done")
+         localStorage.removeItem("user")
+         dispatch(loginuser(null))
          navigate("/")
          toast.success('Logout Done', {
             position: " top-right",
@@ -32,6 +48,8 @@ const Sidebar = () => {
    }
       const userinfo = auth.currentUser;
       //console.log(userinfo.displayName)
+      // let a = localStorage.getItem("user")
+      // console.log(a);
   return (
    <>
       <ToastContainer
@@ -50,11 +68,11 @@ const Sidebar = () => {
     <div className="sidebarbox">
        <div>
           <div className="img_box">
-             {/* <Images source={userinfo && userinfo.photoURL} alt="img"/> */}
-               <Images source="#" alt="img" />
+             <Images source={data && data.photoURL} alt="img"/> 
+               
           </div>
-          {/* <h3 className="username">{userinfo && userinfo.displayName} </h3> */}
-            <h3 className='username'> anik</h3>
+         <h3 className="username">{data && data.displayName} </h3> 
+         <p> {data && data.email} </p>
        </div>
        <div>
            <ul className="navigation">

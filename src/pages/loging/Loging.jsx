@@ -17,9 +17,8 @@ import { Modal, Typography } from '@mui/material';
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
-
-
-
+import { useSelector, useDispatch } from 'react-redux';
+import { loginuser } from '../../slices/userSlices';
 
 
 const style = {
@@ -37,6 +36,7 @@ const style = {
 const Loging = () => {
   const navigate = useNavigate();
   const auth = getAuth();
+  const dispatch = useDispatch()
   let emailregex = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/
   let [passShow, setPassShow] = useState(false)
   const [open, setOpen] = React.useState(false);
@@ -97,6 +97,8 @@ let handleFrom =(e)=>{
        console.log(userCredential)
    
       if(userCredential.user.emailVerified){
+        localStorage.setItem("user", JSON.stringify(userCredential.user))
+        dispatch(loginuser(userCredential.user))
         navigate("/home")
        console.log(userCredential.user)
      }
