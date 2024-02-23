@@ -45,24 +45,7 @@ const Loging = () => {
   const handleModalClose =()=>{
     setOpen(false)
   }
- {/*
-  let handlePassShow = ()=>{
-    if(passShow){
-      setPassShow(false)
-    }
-    else{
-      setPassShow(true)
-    }
-  }
-*/}
-  {/*
-  let handleFrom =(e)=>{
-    let {name, value} = e.target
-    setSignupData({
-      ...signupData,[name]: value
-    })
-  }
-*/}
+
 let [error, setError] = useState({
    email : " ",
    password : " "
@@ -80,6 +63,7 @@ let handleFrom =(e)=>{
  })
 
 }
+
  let handleSubmit =()=>{
     if(!fromData.email){
       setError({email: "email is not here" })
@@ -138,10 +122,6 @@ let handleFrom =(e)=>{
       //console.log(signupData);
     }
  }
-
- 
-
-
 
   let handleForgot =(e)=>{
     setFromData(e.target.value)

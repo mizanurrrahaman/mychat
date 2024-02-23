@@ -1,14 +1,16 @@
 import React from 'react'
-import GroupCarde from '../../components/home/GroupCarde'
-import Images from '../../utillites/Images';
-
+import UserList from './UserList'
+import Friends from './Friends'
+import FriendRequest from './FriendRequest'
+import BlockList from './BlockList'
 
 const Home = () => {
   return (
     <div>
-       <GroupCarde cardtitle="User List">
-            
-       </GroupCarde>
+        <UserList/>
+        <Friends/>
+        <FriendRequest/>
+        <BlockList/>
     </div>
   )
 }

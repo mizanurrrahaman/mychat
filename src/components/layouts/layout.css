@@ -12,6 +12,24 @@
     height: 40px;
     background-color: red;
     border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+}
+.img_box .overlay{
+  position: absolute;
+  bottom: -100%;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.562);
+  transition: all linear 0.4s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+.img_box:hover .overlay{
+    bottom: 0;
 }
 .img_box img{
     width: 100%;

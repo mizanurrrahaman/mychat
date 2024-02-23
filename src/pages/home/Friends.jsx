@@ -1,96 +1,75 @@
-import React, { Children } from 'react'
-import { BsThreeDotsVertical } from "react-icons/bs";
-import Images from '../../utillites/Images';
-import { FaPlus } from "react-icons/fa6";
-const Friends = ({childern}) => {
+import React, { useEffect, useState } from 'react'
+import GroupCard from '../../components/home/GroupCard'
+//import Image from '../../utilities/Image'
+import { TiPlus } from 'react-icons/ti'
+import { getDatabase, ref, onValue, set,push,remove } from "firebase/database";
+import { useSelector } from 'react-redux';
+
+const Friends = () => {
+  const [friendList, setFriendList] = useState()
+  const db = getDatabase();
+  const data = useSelector((state) => state.loginuserdata.value)
+  
+  useEffect(()=> {
+    const useRef = ref(db, 'friends');
+    onValue(useRef, (snapshot) =>{
+      let arr = []
+      snapshot.forEach((item) =>{
+       if(data.uid == item.val().whoreceiveid){
+          arr.push({...item.val(),id:item.key})
+        }
+      })
+      setFriendList(arr)
+    });
+  },[])
+  
+  console.log(friendList)
+  
+  let handleBlock=(blockinfo)=>{
+    console.log(blockinfo);
+    set(push(ref(db, "block")),{
+      whoblockid: data.uid,
+      whoblockname: data.displayName,
+      whoblockemail: data.email,
+      whoblockimg: data.photoURL,
+      blockid: blockinfo.whoreceiveid,
+      blockemail: blockinfo.whoreceiveemail,
+      blockname: blockinfo.whoreceivename,
+      blockimg: blockinfo.whoreceivephoto,
+    }).then(()=>{
+      remove(ref(db, "friends/"+blockinfo.id))
+    })
+  }
+
+
   return (
-    <div className="groupcard">
-        <div className="group_heading">
-        <div className="group_item">
-            <div className='group_title'>
-                 <h4 className='cardtitle'>User List </h4>
-                 <div className="dots">
-                   <BsThreeDotsVertical />
-                </div>
-            </div>
-            <div className="usermainbox">
-              <div className="userhead">
-               <div className="useritem">
-                <div className="userimgbox">
-                  <Images source="" alt="img"/>
-               </div>
-                <div>
-                    <h3>Murad</h3>
-                    <p>React Native Developer</p>
-                </div>
-               </div>
-                <button className="addbutton">block</button>
+    <GroupCard cardtitle="Friend">
+    <div className='usermainbox'>
+      {friendList && friendList.map((item,index)=>(
+          <div key={index} className='useritem'>
+              <div className='userimgbox'>
+               <img source={data.uid == item.whosendid ? item.whoreceivephoto : item.whosendphoto}  alt="img"/>
               </div>
-              <div className="userhead">
-               <div className="useritem">
-                <div className="userimgbox">
-                  <Images source="" alt="img"/>
-               </div>
-                <div>
-                    <h3>Murad</h3>
-                    <p>React Native Developer</p>
-                </div>
-               </div>
-                <button className="addbutton">block</button>
+              <div className='userinfobox'>
+              <div>
+                  {
+                    data.uid == item.whosendid 
+                     ?
+                     <h3>{item.whoreceivename}</h3>
+                     :
+                     <h3>{item.whosendname} </h3>
+                   }
+                  <p>MERN Developer</p>
               </div>
-              <div className="userhead">
-               <div className="useritem">
-                <div className="userimgbox">
-                  <Images source="" alt="img"/>
-               </div>
-                <div>
-                    <h3>Murad</h3>
-                    <p>React Native Developer</p>
-                </div>
-               </div>
-                <button className="addbutton">block</button>
+              <button onClick={()=>handleBlock(item)} className='addbutton'>
+                  Block
+              </button>
               </div>
-              <div className="userhead">
-               <div className="useritem">
-                <div className="userimgbox">
-                  <Images source="" alt="img"/>
-               </div>
-                <div>
-                    <h3>Murad</h3>
-                    <p>React Native Developer</p>
-                </div>
-               </div>
-                <button className="addbutton">block</button>
-              </div>
-              <div className="userhead">
-               <div className="useritem">
-                <div className="userimgbox">
-                  <Images source="" alt="img"/>
-               </div>
-                <div>
-                    <h3>Murad</h3>
-                    <p>React Native Developer</p>
-                </div>
-               </div>
-                <button className="addbutton">block</button>
-              </div>
-              <div className="userhead">
-               <div className="useritem">
-                <div className="userimgbox">
-                  <Images source="" alt="img"/>
-               </div>
-                <div>
-                    <h3>Murad</h3>
-                    <p>React Native Developer</p>
-                </div>
-               </div>
-                <button className="addbutton">block</button>
-              </div>
-            </div>
-             </div>
-        </div>
-        {childern}
-     </div>
+          </div>
+      ))
+      } 
+    </div>
+</GroupCard>
   )
 }
 
