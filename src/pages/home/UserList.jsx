@@ -16,6 +16,7 @@ const UserList = () => {
   const data = useSelector((state) => state.loginuserdata.value)
   const [fRequest, setfRequest] = useState([])
   const [friendList, setFriendList] = useState([])
+  const [requestCheck, setRequestCheck ] = useState([])
   useEffect(()=>{
     const userRef = ref(db, 'users');
     onValue(userRef, (snapshot) =>{
@@ -52,18 +53,25 @@ const UserList = () => {
      const fRequestRef = ref(db, 'friendrequest');
      onValue(fRequestRef, (snapshot) =>{
        let arr = []
+       let fcheck= []
       snapshot.forEach((item) =>{
+        fcheck.push(item.val().receiverid )
+        //setRequestCheck(item.val())
          //console.log(item.val());
+         if(data.uid == item.val().receiverid){
+          fcheck.push(item.val().senderid + item.val().receiverid)
+         }
           if(data.uid == item.val().senderid){
             arr.push(item.val().senderid + item.val().receiverid)
           }
         })
         setfRequest(arr)
+        setRequestCheck(fcheck)
      });
     },[])
 
    console.log(fRequest)
-    
+   console.log(requestCheck)
 
    useEffect(()=> {
     const useRef = ref(db, 'friends');
@@ -119,6 +127,10 @@ const UserList = () => {
                  ?
                  <button className='addbutton'>friend </button>
                   :
+                  requestCheck.includes(item.id + data.id)
+                    ?
+                    <button className='addbutton'>confirm </button>
+                    :
                  <button onClick={()=> handleFRequst(item)} className='addbutton'> 
                   add
                  </button>
