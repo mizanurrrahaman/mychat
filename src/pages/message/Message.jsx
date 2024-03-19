@@ -11,12 +11,12 @@ const Message = () => {
   const [friendList, setFriendList] = useState()
   const db = getDatabase();
   const data = useSelector((state) => state.loginuserdata.value)
-  const activechat = useSelector((state) => state.activeuserdata.value)
+  const activechat = useSelector((state) => state?.activeuserdata?.value)
   //const activechat = useSelector((state) => state?.activeuserdata?.value)
   const dispatch = useDispatch()
   //console.log(activechat)
 
-  //console.log(activechat);
+    console.log(activechat);
    useEffect(()=>{
      const friendRef = ref(db, 'friends');
      onValue(friendRef, (snapshot) =>{
@@ -54,14 +54,15 @@ const Message = () => {
      const messageRef = ref(db, 'message');
      onValue(messageRef, (snapshot)=>{
        let arr = []
+       let activeuserid = activechat.whosendid == data.uid ? activechat.whoreceiveid : activechat.whosendid
        snapshot.forEach((item) =>{
-          if(data.uid == item.val().receiverid || data.uid == item.val().senderid){
-             arr.push({...item.val(), id:item.key})
+          if((item.val().senderid == data.uid && item.val().receiverid == activeuserid) ||(item.val().receiverid == data.uid && item.val().senderid == activeuserid)){
+            arr.push({...item.val(), id:item.key})
           }
        })
        setAllMessage(arr)
      });
-  },activechat)
+  },[activechat])
 
   return (
     <div className='msg_wrapper'>
@@ -118,17 +119,19 @@ const Message = () => {
           <div className='msg_main'>
             {
               allmessage.map((item, index)=>(
-                <div className='sendmsg'>
-                   <p> Hello</p>
+                <div key={index} className={`${item.receiverid == data.uid ? "receivemsg" : "sendmsg"}`} >
+                   <p>{item.message} </p>
                 </div>
               ))
             }
+            {/*
              <div className='sendmsg'>
                 <p>Hello</p>
              </div>
              <div className='receivemsg'>
                 <p>Hello</p>
              </div>
+          */}
              <div className='msg_footer'>
                 <input onChange={(e)=>setMsgText(e.target.value)} className='msg_input' placeholder='Please Enter Your Message'/>
                 <button onClick={handleSubmit} className='msg_send_btn'>Send</button>
