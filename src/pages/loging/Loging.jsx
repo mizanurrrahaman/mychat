@@ -14,7 +14,7 @@ import AuthNavigate from '../../components/AuthNavigate';
 import LoginImg from '../../assets/images/card.png'
 import Images from '../../utillites/Images';
 import { Modal, Typography } from '@mui/material';
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut,signInWithPopup,GoogleAuthProvider } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
@@ -36,7 +36,23 @@ const style = {
 const Loging = () => {
   const navigate = useNavigate();
   const auth = getAuth();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const provider = new GoogleAuthProvider();
+
+  let handleGoogleAuth =()=>{
+    signInWithPopup(auth, provider)
+  .then((result) => {
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+    const user = result.user;
+  }).catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    const email = error.customData.email;
+    const credential = GoogleAuthProvider.credentialFromError(error);
+  });
+  }
+
   let emailregex = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/
   let [passShow, setPassShow] = useState(false)
   const [open, setOpen] = React.useState(false);
@@ -183,7 +199,7 @@ let handleFrom =(e)=>{
            <div className="loginbox"> 
               <div  className="loginbox-inner">
                 <SectionHeading style="auth_heading" text="Login to your account!"/> 
-                 <div className="provider-login">
+                 <div onClick={handleGoogleAuth} className="provider-login">
                      <img src={GoogleSvg} alt="" />
                      <span> Login with Google</span>
                  </div>

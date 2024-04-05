@@ -1,19 +1,22 @@
-import React, { useState, useEffect  } from 'react'
+import React, { useState, useEffect,useRef  } from 'react'
 import './message.css'
 import { getDatabase, ref, onValue, set,push,remove } from "firebase/database";
 import { useSelector, useDispatch } from 'react-redux';
 import { activeuser } from '../../slices/activeUserSlices';
-
+import EmojiPicker from 'emoji-picker-react';
+import ScrollToBottom from 'react-scroll-to-bottom';
 
 const Message = () => {
   const [allmessage, setAllMessage] = useState([])
   const [msgtext, setMsgText] = useState("")
+  const [showemoji, setShowEmoji] = useState(false)
   const [friendList, setFriendList] = useState()
   const db = getDatabase();
   const data = useSelector((state) => state.loginuserdata.value)
   const activechat = useSelector((state) => state?.activeuserdata?.value)
   //const activechat = useSelector((state) => state?.activeuserdata?.value)
   const dispatch = useDispatch()
+  const emojiRef = useRef()
   //console.log(activechat)
 
     console.log(activechat);
@@ -46,7 +49,8 @@ const Message = () => {
       receivername: data.uid == activechat.whoreceiveid ? activechat.whoreceivename : activechat.whoreceivename,
       receiveremail: data.uid == activechat.whoreceiveid ? activechat.whosendemail : activechat.whoreceiveemail,
     }).then(()=>{
-      console.log("msg send hoice");
+      //console.log("msg send hoice");
+      setMsgText(" ")
     })
   } 
 
@@ -63,6 +67,46 @@ const Message = () => {
        setAllMessage(arr)
      });
   },[activechat])
+
+  let handlekeyPress =(e)=>{
+    // console.log(e.key);
+     if(e.key == "Enter"){
+      set(push(ref(db, 'message')),{
+        senderid: data.uid,
+        senderemail: data.email,
+        sendername: data.displayName,
+        message: msgtext,
+        receiverid: data.uid == activechat.whoreceiveid ? activechat.whosendid : activechat.whoreceiveid,
+        receivername: data.uid == activechat.whoreceiveid ? activechat.whoreceivename : activechat.whoreceivename,
+        receiveremail: data.uid == activechat.whoreceiveid ? activechat.whosendemail : activechat.whoreceiveemail,
+      }).then(()=>{
+        //console.log("msg send hoice");
+        setMsgText(" ")
+      })
+     }
+  }
+
+  let handleEmojiPick =(e)=>{
+    setMsgText(msgtext +e.emoji+msgtext)
+    
+  }
+
+  useEffect(()=>{
+    document.body.addEventListener("click",(e)=>{
+      //console.log(e.target)
+      //console.log(emojiRef.current.contains(e.target));
+     
+      if(emojiRef.current.contains(e.target)){
+       setShowEmoji(true)
+      }
+      else{
+       setShowEmoji(false)
+      }
+    })
+  },[])
+
+
+
 
   return (
     <div className='msg_wrapper'>
@@ -116,7 +160,8 @@ const Message = () => {
            
            <p> Active Now</p>
          </div>
-          <div className='msg_main'>
+         <ScrollToBottom className='scrollBox'>
+            <div className='msg_main'>
             {
               allmessage.map((item, index)=>(
                 <div key={index} className={`${item.receiverid == data.uid ? "receivemsg" : "sendmsg"}`} >
@@ -124,18 +169,31 @@ const Message = () => {
                 </div>
               ))
             }
-            {/*
-             <div className='sendmsg'>
-                <p>Hello</p>
-             </div>
-             <div className='receivemsg'>
-                <p>Hello</p>
-             </div>
-          */}
+            </div>
+         </ScrollToBottom>
              <div className='msg_footer'>
-                <input onChange={(e)=>setMsgText(e.target.value)} className='msg_input' placeholder='Please Enter Your Message'/>
-                <button onClick={handleSubmit} className='msg_send_btn'>Send</button>
-             </div>
+                {/* <input onKeyUp={handlekeyPress} onChange={(e)=>setMsgText(e.target.value)} className='msg_input' value={msgtext}  placeholder='Please Enter Your message'/> */}
+                <input onKeyUp={handlekeyPress} onChange={(e)=>setMsgText(e.target.value)} value={msgtext} placeholder='Please Enter your msg' className='msg_input'/>
+                {
+                  msgtext.length > 0 && 
+                 <button onClick={handleSubmit} className='msg_send_btn'>Send</button>
+                }
+
+            <div ref={emojiRef}>
+               {
+                showemoji ?
+                <button onClick={()=>setShowEmoji(false)} className='msg_send_btn'>Un Emoji</button>
+                :
+                <button onClick={()=>setShowEmoji(!showemoji)} className='msg_send_btn'> Emoji</button>
+               }
+               {
+                showemoji && 
+                <div className='emoji_wrapper'>
+                    <EmojiPicker onEmojiClick={handleEmojiPick} />
+                </div>
+               }
+              </div>
+             
           </div>
        </div>
          :
